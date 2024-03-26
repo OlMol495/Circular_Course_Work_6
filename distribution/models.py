@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -18,6 +19,19 @@ class Client(models.Model):
         ordering = ['email']
 
 
+class Message(models.Model):
+    title = models.CharField(max_length=250, verbose_name='Заголовок')
+    message = models.TextField(verbose_name='Текст')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+        ordering = ['title',]
+
+
 class CircularSettings(models.Model):
 
     class Status(models.TextChoices):
@@ -31,32 +45,49 @@ class CircularSettings(models.Model):
         WEEKLY = 'Н', 'weekly'
         MONTHLY = 'М', 'monthly'
 
-    start_date = models.DateField(verbose_name='начало')
-    end_date = models.DateField(verbose_name='окончание', **NULLABLE)
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='сообщение', **NULLABLE)
+    start_time = models.DateField(verbose_name='начало')
+    end_time = models.DateField(verbose_name='окончание', **NULLABLE)
     frequency = models.CharField(max_length=2, choices=Frequency.choices,
                                  default=Frequency.DAILY, verbose_name='Периодичность')
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.CREATED,
                               verbose_name='Статус')
     clients = models.ManyToManyField(Client, verbose_name='Получатели')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE,
+                              verbose_name='Менеджер рассылки')
 
     def __str__(self):
-        return f"{self.start_date}, {self.end_date}, {self.frequency}, {self.status}"
+        return f"{self.start_time}, {self.end_time}, {self.frequency}, {self.status}"
 
     class Meta:
         verbose_name = 'Параметры рассылки'
         verbose_name_plural = 'Параметры рассылки'
-        ordering = ['start_date', 'frequency', ]
+        ordering = ['start_time', 'frequency', ]
 
 
-class Message(models.Model):
-    title = models.CharField(max_length=250, verbose_name='Заголовок')
-    message = models.TextField(verbose_name='Текст')
+
+class Logs(models.Model):
+
+    SENT = 'sent'
+    FAILED = 'failed'
+    PENDING = 'pending'
+
+    STATUS = [
+        (SENT, 'Отправлено'),
+        (FAILED, 'Не удалось отправить'),
+        (PENDING, 'В ожидании')
+    ]
+
+    date = models.DateTimeField(auto_now_add=True, verbose_name='время последней попытки')
+    status = models.CharField(max_length=50, choices=STATUS, default=PENDING, verbose_name='статус попытки')
+    response = models.CharField(max_length=250, verbose_name='ответ почтового сервера', **NULLABLE)
+
+    circular = models.ForeignKey(CircularSettings, on_delete=models.CASCADE, verbose_name='рассылка', **NULLABLE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name='клиент рассылки', **NULLABLE)
 
     def __str__(self):
-        return self.title
+        return f'{self.date} - {self.status}'
 
     class Meta:
-        verbose_name = 'Сообщение'
-        verbose_name_plural = 'Сообщения'
-        ordering = ['title',]
-
+        verbose_name = 'лог рассылки'
+        verbose_name_plural = 'логи рассылки'

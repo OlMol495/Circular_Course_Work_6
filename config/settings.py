@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     "distribution",
     "users",
+    "django_apscheduler",
 ]
 
 MIDDLEWARE = [
@@ -124,11 +125,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
-STATICFILES_DIRS = (
-    BASE_DIR / 'static',
-)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static/',
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -143,10 +144,10 @@ ROOT_EMAIL = os.getenv("ROOT_EMAIL")
 ROOT_PASSWORD = os.getenv("ROOT_PASSWORD")
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv("EMAIL_HOST")  #'smtp.gmail.com'
-EMAIL_PORT = os.getenv("EMAIL_PORT")  #587
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  #'oycaxmuwxfcqvtjr'
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 
 AUTH_USER_MODEL = 'users.User'
