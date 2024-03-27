@@ -15,18 +15,3 @@ urlpatterns = [
     path('forgot_password/', forgot_password, name='forgot_password'),
     path('verify_email/<str:uidb64>/<str:token>/', EmailVerifyView.as_view(), name='verify_email'),
 ]
-
-
-# from django.urls import path
-# from users.apps import UsersConfig
-# from users.views import RegisterView, ProfileView, UserLoginView, UserLogoutView
-#
-# app_name = UsersConfig.name
-#
-#
-# urlpatterns = [
-#     path("login/", UserLoginView.as_view(), name="login"),
-#     path("logout/", UserLogoutView.as_view(), name="logout"),
-#     path("register/", RegisterView.as_view(), name="register"),
-#     path("profile/", ProfileView.as_view(), name="profile"),
-# ]
