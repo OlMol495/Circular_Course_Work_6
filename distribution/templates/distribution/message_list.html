@@ -1,41 +1,50 @@
 {% extends 'distribution/base.html' %}
 {% block content %}
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-<!--    <h1 class="display-4">ConvenientCircular</h1>-->
-        <h1 style="color:dodgerblue" class="display-5" >{{ title }}</h1>
-<!--    <p class="lead">{{ title }}</p>-->
+    <!--    <h1 class="display-4">ConvenientCircular</h1>-->
+    <h1 style="color:dodgerblue" class="display-5">{{ title }}</h1>
+    <!--    <p class="lead">{{ title }}</p>-->
 </div>
-<div class="col-12 mb-5">
-    {% if perms.distribution.change_message %}
-   <a class="btn btn-outline-primary" href="{% url 'distribution:message_create' %}">Добавить сообщение для рассылки</a>
-    {% endif %}
-</div>
-{% for object in object_list %}
-<div class="col-md-4">
-    <div class="card mb-4 box-shadow">
-        <div class="card-body">
-            <p class="card-text">
-                <span class="text-muted">{{ object }}</span>
-            </p>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                    {% if perms.distribution.view_message %}
-                    <a href="{% url 'distribution:message_detail' object.pk %}"
-                       class="btn btn-sm btn-outline-secondary">View</a>
-                    {% endif %}
-                    {% if perms.distribution.change_message %}
-                    <a href="{% url 'distribution:message_update' object.pk %}"
-                       class="btn btn-sm btn-outline-secondary">Edit</a>
-                    {% endif %}
-                    {% if user.is_superuser %}
-                    <a href="{% url 'distribution:message_delete' object.pk %}"
-                       class="btn btn-sm btn-outline-danger">Delete</a>
-                    {% endif %}
-                </div>
-
-            </div>
-        </div>
+    <div class="col-12 mb-5">
+        {% if perms.distribution.change_message %}
+        <a class="btn btn-outline-primary" href="{% url 'distribution:message_create' %}">Добавить сообщение для
+            рассылки</a>
+        {% endif %}
     </div>
-</div>
-{% endfor %}
+    {% for object in object_list %}
+        {% if user.is_superuser or user.is_staff or user.is_owner %}
+            <div class="col-3">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{object.title}}</h4>
+
+                    </div>
+                    <div class="card-body">
+
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+
+                            <li>- {{object.message|truncatechars:10 }}</li>
+                        </ul>
+
+                        <div class="btn-group">
+                            {% if perms.distribution.view_message %}
+                            <a href="{% url 'distribution:message_detail' object.pk %}"
+                               class="btn btn-sm btn-outline-secondary">View</a>
+                            {% endif %}
+                            {% if perms.distribution.change_message %}
+                            <a href="{% url 'distribution:message_update' object.pk %}"
+                               class="btn btn-sm btn-outline-secondary">Edit</a>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                            <a href="{% url 'distribution:message_delete' object.pk %}"
+                               class="btn btn-sm btn-outline-danger">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endif%}
+
+    {% endfor %}
 {% endblock %}

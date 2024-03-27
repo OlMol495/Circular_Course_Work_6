@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin, PermissionRequiredMixin
-from django.forms import inlineformset_factory
 from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
+from blog.models import Post
 from distribution.forms import CircularForm, MessageForm, ClientForm
 from distribution.models import Client, CircularSettings, Message
 
@@ -24,8 +24,9 @@ class HomeTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = Message.objects.all()[:3]
+        context_data['object_list'] = Post.objects.all()[:3]
         context_data['circular_count'] = CircularSettings.objects.count()
+        context_data['active_circular_count'] = CircularSettings.objects.filter(is_active=True).count()
         context_data['unique_clients_count'] = Client.objects.count()
         return context_data
 
@@ -124,7 +125,7 @@ class MessageListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        if self.request.user.is_superuser:
+        if self.request.user.is_superuser or self.request.user.is_staff:
             queryset = Message.objects.all()
         else:
             queryset = queryset.filter(owner=self.request.user)
@@ -189,22 +190,22 @@ class ClientCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class ClientListView(LoginRequiredMixin, ListView):
+
     model = Client
     paginate_by = 10
-    permission_required = 'distribution.view_client'
     login_url = 'users:login'
     extra_context = {
         'title': 'Список клиентов',
     }
 
-    def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs)
-        if self.request.user.is_superuser:
-            queryset = Client.objects.all()
-            return queryset
-        else:
-            raise Http404
+    # def get_queryset(self, *args, **kwargs):
+    #     queryset = super().get_queryset(*args, **kwargs)
+    #     if self.request.user.is_superuser or self.request.user.is_staff:
+    #         queryset = Client.objects.all()
+    #         return queryset
+    #     else:
+    #         raise Http404
 
 
 class ClientDetailView(OwnerSuperuserMixin, DetailView):

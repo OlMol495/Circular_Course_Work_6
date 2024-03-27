@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "distribution",
     "users",
     "django_apscheduler",
+    "blog",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
@@ -160,3 +161,12 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'users:login'
+
+CACHE_ENABLED = os.getenv('CACHE_ENABLED')
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv('CACHE_LOCATION'),
+        }
+    }

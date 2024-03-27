@@ -10,12 +10,13 @@
             <li><a href="{% url 'users:login' %}" class="text-white">Войти</a></li>
             <li><a href="{% url 'users:register' %}" class="text-white">Регистрация</a></li>
         {% endif %}
-        {% if user.is_superuser %}
+        {% if user.is_staff %}
         <li><a href="{% url 'distribution:client_list' %}" class="text-white">Список клиентов</a></li>
         <li><a href="{% url 'distribution:message_list' %}" class="text-white">Тексты рассылок</a></li>
         <li><a href="{% url 'distribution:circular_list' %}" class="text-white">Рассылки</a></li>
         {% endif %}
         <li><a href="{% url 'distribution:contact' %}" class="text-white">Контакты</a></li>
+        <li><a href="{% url 'blog:list' %}" class="text-white">Блог</a></li>
 
     </ul>
 </div>

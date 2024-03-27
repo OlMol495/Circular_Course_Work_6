@@ -11,15 +11,14 @@
     {% endif %}
 </div>
 {% for object in object_list %}
+{% if user.is_superuser or user.is_staff or user.is_owner %}
 <div class="col-md-4">
     <div class="card mb-4 box-shadow">
         <div class="card-body">
             <p class="card-text">
-<!--                {% if object.is_active %}-->
-<!--                {{ object|title }}-->
-<!--                {% else %}-->
+
                 <span class="text-muted">{{ object }}</span>
-<!--                {% endif %}-->
+
             </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
@@ -41,5 +40,6 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endfor %}
 {% endblock %}

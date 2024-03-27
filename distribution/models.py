@@ -58,6 +58,7 @@ class CircularSettings(models.Model):
     clients = models.ManyToManyField(Client, verbose_name='Получатели')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE,
                               verbose_name='Менеджер рассылки')
+    is_active = models.BooleanField(default=True, verbose_name='Активна')
 
     def __str__(self):
         return f"{self.start_time}, {self.end_time}, {self.frequency}, {self.status}"

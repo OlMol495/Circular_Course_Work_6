@@ -5,7 +5,7 @@
 <!--    <h1 class="display-4">ConvenientCircular</h1>-->
 <!--    <p class="lead">ConvenientCircular - это самый удобный сервис по регулярной рассылке сообщений</p>-->
         <h1 style="color:dodgerblue" class="display-5" >{{ title }}</h1>
-        <h4 class="my-0 font-weight-normal text-center">Рассылки</h4>
+        <h4 class="my-0 font-weight-normal text-center">Новые публикации в нашем блоге</h4>
 </div>
 
 
@@ -16,10 +16,10 @@
         <div class="col-3">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{object.title}}</h4>
+                    <h4 class="card-title pricing-card-title">{{object.title}}</h4>
                 </div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{object.message}}</h1>
+                    <h1 class="my-0 font-weight-normal">{{object.text|truncatechars:10}}</h1>
                 </div>
             </div>
         </div>
@@ -32,6 +32,9 @@
                             <div class="ms-2 me-auto text-between">
                                 <small class="text-body-primary">Количество рассылок всего:&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;</small>
                                 <span class="badge badge-info rounded-pill">{{ circular_count }}</span>
+                                <hr class="my-1 "> <!-- Горизонтальный разделитель -->
+                                <small class="text-body-primary">Количество активных рассылок:&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;</small>
+                                <span class="badge badge-info rounded-pill">{{ active_circular_count }}</span>
                                 <hr class="my-1 "> <!-- Горизонтальный разделитель -->
                                 <small class="text-body-secondary">Количество клиентов":&emsp;&emsp;&nbsp;</small>
                                 <span class="badge badge-info rounded-pill">{{ unique_clients_count }}</span>
