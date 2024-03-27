@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from distribution.models import NULLABLE
+
+
+NULLABLE = {'blank': True, 'null': True}
 
 
 class User(AbstractUser):
@@ -13,7 +15,10 @@ class User(AbstractUser):
     telegram = models.CharField(max_length=150, verbose_name='Телеграм', **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='Аватар', **NULLABLE)
     email_confirmed = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False, verbose_name='администратор')
+    is_staff = models.BooleanField(default=False, verbose_name='менеджер')
     is_active = models.BooleanField(default=False)
+    token = models.CharField(max_length=255, **NULLABLE)
 
 
     USERNAME_FIELD = "email"

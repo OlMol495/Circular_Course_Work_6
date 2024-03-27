@@ -12,8 +12,7 @@ from distribution.models import Client, CircularSettings, Message
 class OwnerSuperuserMixin:
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        #if self.object.owner != self.request.user and not self.request.user.is_superuser:
-        if not self.request.user.is_superuser:
+        if self.object.owner != self.request.user and not self.request.user.is_superuser:
             raise Http404
         return self.object
 
@@ -25,13 +24,16 @@ class HomeTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = Client.objects.all()[:3]
+        context_data['object_list'] = Message.objects.all()[:3]
+        context_data['circular_count'] = CircularSettings.objects.count()
+        context_data['unique_clients_count'] = Client.objects.count()
         return context_data
 
 
-class CircularCreateView(CreateView):
+class CircularCreateView(PermissionRequiredMixin, CreateView):
     model = CircularSettings
     form_class = CircularForm
+    permission_required = 'main.add_circular_settings'
     success_url = reverse_lazy('distribution:circular_list')
 
     def form_valid(self, form, *args, **kwargs):

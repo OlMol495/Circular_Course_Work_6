@@ -6,7 +6,7 @@
 <!--    <p class="lead">{{ title }}</p>-->
 </div>
 <div class="col-12 mb-5">
-    {% if perms.distribution.add_client %}
+    {% if perms.distribution.change_client %}
    <a class="btn btn-outline-primary" href="{% url 'distribution:client_create' %}">Добавить клиента</a>
     {% endif %}
 </div>

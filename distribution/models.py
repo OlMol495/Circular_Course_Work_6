@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 
+from users.models import User
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -9,6 +10,7 @@ class Client(models.Model):
     name = models.CharField(max_length=250, verbose_name='Имя')
     email = models.EmailField(verbose_name='Имейл')
     comments = models.TextField(**NULLABLE, verbose_name='Сообщение')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь-владелец', **NULLABLE)
 
     def __str__(self):
         return f"{self.name}: {self.email}"
@@ -22,6 +24,7 @@ class Client(models.Model):
 class Message(models.Model):
     title = models.CharField(max_length=250, verbose_name='Заголовок')
     message = models.TextField(verbose_name='Текст')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='создатель сообщения', **NULLABLE)
 
     def __str__(self):
         return self.title

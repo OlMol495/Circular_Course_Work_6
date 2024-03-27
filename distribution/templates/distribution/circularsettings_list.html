@@ -6,7 +6,7 @@
 <!--    <p class="lead">{{ title }}</p>-->
 </div>
 <div class="col-12 mb-5">
-    {% if perms.distribution.add_circular %}
+    {% if perms.distribution.change_circular_settings %}
    <a class="btn btn-outline-primary" href="{% url 'distribution:circular_create' %}">Добавить рассылку</a>
     {% endif %}
 </div>
