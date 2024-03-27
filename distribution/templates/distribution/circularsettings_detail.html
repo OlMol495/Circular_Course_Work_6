@@ -1,0 +1,56 @@
+{% extends 'distribution/base.html' %}
+{% block content %}
+<div class="col-12 mb-5">
+    {% if perms.distribution.add_circular %}
+   <a class="btn btn-outline-primary" href="{% url 'distribution:circular_update' object.pk %}">Изменить рассылку</a>
+    {% endif %}
+</div>
+<div class="col-12">
+    <div class="row">
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {{ title }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <td>Текст</td>
+                            <td>{{ object.message }}</td>
+                        </tr>
+                        <tr>
+                            <td>Начало рассылки</td>
+                            <td>{{ object.start_time }}</td>
+                        </tr>
+                        <tr>
+                            <td>Завершение рассылки</td>
+                            <td>{{ object.end_time }}</td>
+                        </tr>
+                        <tr>
+                            <td>Периодичность</td>
+                            <td>{{ object.frequency }}</td>
+                        </tr>
+                        <tr>
+                            <td>Статус</td>
+                            <td>{{ object.status }}</td>
+                        </tr>
+                        <tr>
+                            <td>Подписчики</td>
+                            <td>{{ object.clients }}</td>
+                        </tr>
+                        <tr>
+                            <td>Менеджер рассылки</td>
+                            <td>{{ object.owner }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

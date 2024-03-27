@@ -1,10 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'distribution/base.html' %}
+{% block content %}
+<div class="col-12 mb-5">
+    {% if perms.distribution.add_client %}
+   <a class="btn btn-outline-primary" href="{% url 'distribution:client_update' object.pk %}">Изменить данные клиента</a>
+    {% endif %}
+</div>
+<div class="col-12">
+    <div class="row">
 
-</body>
-</html>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {{ title }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr>
+                            <td>Имя</td>
+                            <td>{{ object.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Почта</td>
+                            <td>{{ object.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Ремарки</td>
+                            <td>{{ object.comments }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer"></div>
+            </div>
+        </div>
+
+<!--        <div class="col-6">-->
+<!--            <div class="card">-->
+<!--                <div class="card-header">-->
+<!--                    <h3 class="card-title">-->
+<!--                        Предметы студента-->
+<!--                    </h3>-->
+<!--                </div>-->
+<!--                <div class="card-body">-->
+<!--                    <ul>-->
+
+<!--                        {% for subject in subjects %}-->
+<!--                        <li>{{ subject }}</li>-->
+<!--                        {% endfor %}-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div class="card-footer"></div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+    </div>
+</div>
+{% endblock %}

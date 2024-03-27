@@ -6,8 +6,8 @@
 <!--    <p class="lead">{{ title }}</p>-->
 </div>
 <div class="col-12 mb-5">
-    {% if perms.distribution.add_client %}
-   <a class="btn btn-outline-primary" href="{% url 'distribution:client_create' %}">Добавить клиента</a>
+    {% if perms.distribution.add_message %}
+   <a class="btn btn-outline-primary" href="{% url 'distribution:message_create' %}">Добавить сообщение для рассылки</a>
     {% endif %}
 </div>
 {% for object in object_list %}
@@ -15,24 +15,20 @@
     <div class="card mb-4 box-shadow">
         <div class="card-body">
             <p class="card-text">
-<!--                {% if object.is_active %}-->
-<!--                {{ object|title }}-->
-<!--                {% else %}-->
                 <span class="text-muted">{{ object }}</span>
-<!--                {% endif %}-->
             </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    {% if perms.distribution.view_client %}
-                    <a href="{% url 'distribution:client_detail' object.pk %}"
+                    {% if perms.distribution.view_message %}
+                    <a href="{% url 'distribution:message_detail' object.pk %}"
                        class="btn btn-sm btn-outline-secondary">View</a>
                     {% endif %}
-                    {% if perms.distribution.change_client %}
-                    <a href="{% url 'distribution:client_update' object.pk %}"
+                    {% if perms.distribution.change_message %}
+                    <a href="{% url 'distribution:message_update' object.pk %}"
                        class="btn btn-sm btn-outline-secondary">Edit</a>
                     {% endif %}
                     {% if user.is_superuser %}
-                    <a href="{% url 'distribution:client_delete' object.pk %}"
+                    <a href="{% url 'distribution:message_delete' object.pk %}"
                        class="btn btn-sm btn-outline-danger">Delete</a>
                     {% endif %}
                 </div>

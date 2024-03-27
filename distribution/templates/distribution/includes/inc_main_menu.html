@@ -1,8 +1,21 @@
-<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <h5 class="my-0 mr-md-auto font-weight-normal">ConvenientCircular</h5>
-    <nav class="ms-5">
-        <a class="p-2 btn btn-outline-primary" href="{% url 'distribution:home' %}">Главная</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'distribution:client_list' %}">Список клиентов</a>
+<div class="col-sm-4 offset-md-1 py-4">
+    <h4 class="text-white">Меню</h4>
+    <ul class="list-unstyled">
+        <li><a href="{% url 'distribution:home' %}" class="text-white">Главная</a></li>
+        <li><a href="{% url 'distribution:client_create' %}" class="text-white">Стать клиентом рассылок</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'users:profile' %}" class="text-white">Профиль</a></li>
+            <li><a href="{% url 'users:logout' %}" class="text-white">Выйти</a></li>
+        {% else %}
+            <li><a href="{% url 'users:login' %}" class="text-white">Войти</a></li>
+            <li><a href="{% url 'users:register' %}" class="text-white">Регистрация</a></li>
+        {% endif %}
+        {% if user.is_superuser %}
+        <li><a href="{% url 'distribution:client_list' %}" class="text-white">Список клиентов</a></li>
+        <li><a href="{% url 'distribution:message_list' %}" class="text-white">Тексты рассылок</a></li>
+        <li><a href="{% url 'distribution:circular_list' %}" class="text-white">Рассылки</a></li>
+        {% endif %}
+        <li><a href="{% url 'distribution:contact' %}" class="text-white">Контакты</a></li>
 
-    </nav>
+    </ul>
 </div>

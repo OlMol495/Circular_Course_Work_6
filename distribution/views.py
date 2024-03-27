@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin, PermissionRequiredMixin
+from django.forms import inlineformset_factory
 from django.http import Http404
+from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
@@ -10,7 +12,8 @@ from distribution.models import Client, CircularSettings, Message
 class OwnerSuperuserMixin:
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        if self.object.owner != self.request.user and not self.request.user.is_superuser:
+        #if self.object.owner != self.request.user and not self.request.user.is_superuser:
+        if not self.request.user.is_superuser:
             raise Http404
         return self.object
 
@@ -114,7 +117,7 @@ class MessageListView(LoginRequiredMixin, ListView):
     model = Message
     login_url = 'users:login'
     extra_context = {
-        'title': 'Список писем',
+        'title': 'Тексты рассылок',
     }
 
     def get_queryset(self, *args, **kwargs):
@@ -171,6 +174,9 @@ class MessageDeleteView(OwnerSuperuserMixin, DeleteView):
 class ClientCreateView(CreateView):
     model = Client
     form_class = ClientForm
+    extra_context = {
+        'title': 'Новый клиент',
+    }
     success_url = reverse_lazy('distribution:client_list')
 
     def form_valid(self, form):
@@ -190,13 +196,13 @@ class ClientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         'title': 'Список клиентов',
     }
 
-    # def get_queryset(self, *args, **kwargs):
-    #     queryset = super().get_queryset(*args, **kwargs)
-    #     if self.request.user.is_superuser:
-    #         queryset = Client.objects.all()
-    #         return queryset
-    #     else:
-    #         raise Http404
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        if self.request.user.is_superuser:
+            queryset = Client.objects.all()
+            return queryset
+        else:
+            raise Http404
 
 
 class ClientDetailView(OwnerSuperuserMixin, DetailView):
@@ -205,6 +211,12 @@ class ClientDetailView(OwnerSuperuserMixin, DetailView):
         'title': 'Данные клиента',
     }
 
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if not self.request.user.is_superuser:
+            raise Http404
+        return self.object
+
 
 class ClientUpdateView(UpdateView):
     model = Client
@@ -212,6 +224,12 @@ class ClientUpdateView(UpdateView):
     extra_context = {
         'title': 'Изменение данных клиента',
     }
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if not self.request.user.is_superuser:
+            raise Http404
+        return self.object
 
     def form_valid(self, form):
         if form.is_valid():
@@ -232,8 +250,14 @@ class ClientDeleteView(OwnerSuperuserMixin, DeleteView):
     success_url = reverse_lazy('distribution:client_list')
 
 
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        print(f'{name} ({email}): {message}')
 
-
-
-
-
+    context = {
+        'title': 'Контакты'
+    }
+    return render(request, 'distribution/contact.html', context)
